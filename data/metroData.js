@@ -1,4 +1,4 @@
-[
+const metrosData = [
   {
     "metro": "Hamilton, ON",
     "population": 747545,
@@ -120596,4 +120596,7 @@
     "seasonArray": [],
     "teamArray": []
   }
-]
+];
+
+module.exports = metrosData;
+

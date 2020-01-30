@@ -17,8 +17,7 @@ exports.up = (knex) => {
       table.string('title_metro');
       table.integer('metro_id').unsigned()
       table.foreign('metro_id')
-      .references('metros.id');
-
+        .references('metros.id');
       table.timestamps(true, true);
     })
 };

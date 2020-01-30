@@ -1,4 +1,4 @@
-[  
+const titleData = [  
   {
     "index": 1,
     "year": 1870,
@@ -12283,4 +12283,6 @@
     "final_four4": "Milwaukee Brewers",
     "final_four4_metro": "Milwaukee, WI"
   }
-]
+];
+
+module.exports = titleData;
