@@ -90,9 +90,9 @@ app.post('/api/v1/titles/:metro_id/titles', async (request, response) => {
       return response.status(422).send({ error: `Expected format: { year: <Number>, level: <String>, sport: <String>, winner: <string>, title_mtero: <String>}. Missing a ${requiredParam} property.`})
     }
   }
-  
+
   const titleToAdd = {
-    metro_id: metro_id,
+    metro_id: Number(metro_id),
     year: titleRequest.year,
     level: titleRequest.level,
     winner: titleRequest.winner,
@@ -101,7 +101,7 @@ app.post('/api/v1/titles/:metro_id/titles', async (request, response) => {
 
   try {
     const newTitleId = await database('titles').insert(titleToAdd, 'id')
-    return response.status(201).json({ id: newTitleId[0] });
+    return response.status(201).json({ id: newTitleId[0], ...titleToAdd });
   } catch(error) {
     return response.status(500).json("Internal Server Error")
   }
