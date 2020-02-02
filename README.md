@@ -14,4 +14,4 @@
 | **Get a single title by it's ID**  |  **api/v1/titles/:id**  | GET  | N/A  | ```{ "title": { "id": 4236246,"year": 1998, "level": "pro", "sport": "NFL", "winner": "Denver Broncos", "title_metro": "Denver, CO", "metro_id": 21164, "created_at": "2020-02-02T00:21:51.013Z","updated_at": "2020-02-02T00:21:51.013Z" } }```  |
 |   |   |  POST |   |   |
 |   |   |  POST |   |   |
-|   |   |  DELETE |   |   |
+|  **Delete a title** |  /api/v1/titles/:id |  DELETE | N/A  | ```{ message: 'Success: Title has been removed' }```   |

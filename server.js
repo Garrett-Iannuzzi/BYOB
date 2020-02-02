@@ -13,7 +13,7 @@ app.get('/api/v1/metros', async (request, response) => {
     const metros = await database('metros').select();
     return response.status(200).json(metros)
   } catch(error) {
-    return response.status(500).json("Internal Server Error")
+    return response.status(500).json('Internal Server Error')
   }
 });
 
@@ -22,7 +22,7 @@ app.get('/api/v1/titles', async (request, response) => {
     const titles = await database('titles').select();
     return response.status(200).json(titles)
   } catch(error) {
-    return response.status(500).json("Internal Server Error")
+    return response.status(500).json('Internal Server Error')
   }
 });
 
@@ -39,7 +39,7 @@ app.get('/api/v1/metros/:id', async (request, response) => {
     }
     return response.status(200).json({metro: metro[0]})
   } catch(error) {
-    return response.status(500).json("Internal Server Error")
+    return response.status(500).json('Internal Server Error')
   }
 });
 
@@ -51,17 +51,32 @@ app.get('/api/v1/titles/:id', async (request, response) => {
   }
   try {
     const titles  = await database('titles').where('id', id).select();
-    console.log(titles)
     if(!titles.length) {
       return response.status(404).json({ error: 'Could not find title with ID:' + id })
     }
     return response.status(200).json({title: titles[0]})
   } catch(error) {
-    return response.status(500).json("Internal Server Error")
+    return response.status(500).json('Internal Server Error')
   }
 });
+
+app.delete('/api/v1/titles/:id', async (request,response) => {
+  const { id } = request.params;
+  const titles = await database('titles').select();
+  const getTitleToDelete = titles.find(title => title.id === parseInt(id));
+  
+  
+  try {
+    if(!getTitleToDelete) {
+      return response.status(400).json({ error: 'Could not find title with ID:' + id })
+    }
+    database('titles').where('id', getTitleToDelete).del();
+    return response.status(200).json({ message: 'Success: Title has been removed'})
+  } catch(error) {
+    return response.status(500).json('Internal Server Error')
+  }
+})
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
 });
-
