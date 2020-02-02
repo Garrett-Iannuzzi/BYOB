@@ -79,9 +79,38 @@ app.post('/api/v1/metros', async (request, response) => {
     return response.status(500).json("Internal Server Error")
   }
 });
+
+app.post('/api/v1/titles/:metro_id/titles', async (request, response) => {
+  const titleRequest = request.body;
+  const { metro_id } = request.params;
+  console.log(titleRequest)
+  
+  for (let requiredParam of [ 'year', 'level', 'sport', 'winner', 'title_metro' ]) {
+    if (!titleRequest[requiredParam]) {
+      return response.status(422).send({ error: `Expected format: { year: <Number>, level: <String>, sport: <String>, winner: <string>, title_mtero: <String>}. Missing a ${requiredParam} property.`})
+    }
+  }
+  
+  const titleToAdd = {
+    metro_id: metro_id,
+    year: titleRequest.year,
+    level: titleRequest.level,
+    winner: titleRequest.winner,
+    title_metro: titleRequest.title_metro
+  }
+
+  try {
+    const newTitleId = await database('titles').insert(titleToAdd, 'id')
+    return response.status(201).json({ id: newTitleId[0] });
+  } catch(error) {
+    return response.status(500).json("Internal Server Error")
+  }
+});
   
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
 });
+
+//21164
 
