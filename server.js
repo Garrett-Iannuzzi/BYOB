@@ -101,7 +101,7 @@ app.post('/api/v1/titles/:metro_id/titles', async (request, response) => {
 
   try {
     const newTitleId = await database('titles').insert(titleToAdd, 'id')
-    return response.status(201).json({ id: newTitleId[0], ...titleToAdd });
+    return response.status(201).json({ title: { id: newTitleId[0], ...titleToAdd }});
   } catch(error) {
     return response.status(500).json("Internal Server Error")
   }
