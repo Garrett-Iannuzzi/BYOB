@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
+
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
+
+app.use(express.json());
 
 
 app.set('port', process.env.PORT || 3000);
@@ -51,7 +54,6 @@ app.get('/api/v1/titles/:id', async (request, response) => {
   }
   try {
     const titles  = await database('titles').where('id', id).select();
-    console.log(titles)
     if(!titles.length) {
       return response.status(404).json({ error: 'Could not find title with ID:' + id })
     }
@@ -60,6 +62,24 @@ app.get('/api/v1/titles/:id', async (request, response) => {
     return response.status(500).json("Internal Server Error")
   }
 });
+
+app.post('/api/v1/metros', async (request, response) => {
+  const newMetro = request.body;
+  
+  for (let requiredParam of [ 'metro', 'population', 'teams' ]) {
+    if (!newMetro[requiredParam]) {
+      return response.status(422).send({ error: `Expected format: { metro: <String>, population: <Number>, type: <String>}. Missing a ${requiredParam} property.`})
+      }
+    }
+
+  try {
+    const metroId = await database('metros').insert(newMetro, 'id')
+    return response.status(201).json({ id: metroId[0] });
+  } catch(error) {
+    return response.status(500).json("Internal Server Error")
+  }
+});
+  
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
