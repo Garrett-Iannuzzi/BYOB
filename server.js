@@ -50,11 +50,12 @@ app.get('/api/v1/titles/:id', async (request, response) => {
     return response.status(422).json({ error: 'Incorrect ID:' + id })
   }
   try {
-    const metro  = await database('titles').where('id', id).select();
-    if(!metro.length) {
+    const titles  = await database('titles').where('id', id).select();
+    console.log(titles)
+    if(!titles.length) {
       return response.status(404).json({ error: 'Could not find title with ID:' + id })
     }
-    return response.status(200).json({title: title[0]})
+    return response.status(200).json({title: titles[0]})
   } catch(error) {
     return response.status(500).json("Internal Server Error")
   }
