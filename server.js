@@ -52,6 +52,7 @@ app.get('/api/v1/titles/:id', async (request, response) => {
   if(!parseInt(id)) {
     return response.status(422).json({ error: 'Incorrect ID:' + id })
   }
+  
   try {
     const titles  = await database('titles').where('id', id).select();
     if(!titles.length) {
@@ -74,7 +75,7 @@ app.post('/api/v1/metros', async (request, response) => {
 
   try {
     const metroId = await database('metros').insert(newMetro, 'id')
-    return response.status(201).json({ id: metroId[0] });
+    return response.status(201).json({ metro: { id: metroId[0], ...newMetro }});
   } catch(error) {
     return response.status(500).json("Internal Server Error")
   }
@@ -83,7 +84,6 @@ app.post('/api/v1/metros', async (request, response) => {
 app.post('/api/v1/titles/:metro_id/titles', async (request, response) => {
   const titleRequest = request.body;
   const { metro_id } = request.params;
-  console.log(titleRequest)
   
   for (let requiredParam of [ 'year', 'level', 'sport', 'winner', 'title_metro' ]) {
     if (!titleRequest[requiredParam]) {
@@ -92,7 +92,7 @@ app.post('/api/v1/titles/:metro_id/titles', async (request, response) => {
   }
 
   const titleToAdd = {
-    metro_id: Number(metro_id),
+    metro_id: parseInt(metro_id),
     year: titleRequest.year,
     level: titleRequest.level,
     winner: titleRequest.winner,
@@ -111,8 +111,7 @@ app.delete('/api/v1/titles/:id', async (request,response) => {
   const { id } = request.params;
   const titles = await database('titles').select();
   const getTitleToDelete = titles.find(title => title.id === parseInt(id));
-  
-  
+
   try {
     if(!getTitleToDelete) {
       return response.status(400).json({ error: 'Could not find title with ID:' + id })
@@ -123,7 +122,6 @@ app.delete('/api/v1/titles/:id', async (request,response) => {
     return response.status(500).json('Internal Server Error')
   }
 })
-
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`);
