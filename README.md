@@ -12,6 +12,7 @@
 
 ### Deployment:
 - This app is deployed on HeroKu, you can use the endpoints below to search for data.
+- https://byob1.herokuapp.com/api/v1/metros
 
 ### Setup:
 - Clone down this repo and run `npm install`
